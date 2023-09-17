@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 )
@@ -52,14 +51,14 @@ func (c *Cell) LiveNeighbors(gameState *GameState) int {
 }
 
 type GameState struct {
-	Grid [][]Cell `json:"grid,omitempty"`
+	Grid  [][]Cell `json:"grid,omitempty"`
+	Ticks int      `json:"ticks,omitempty"`
 }
 
 type Game struct {
 	Id      int       `json:"id,omitempty"`
 	State   GameState `json:"state,omitempty"`
 	Running bool      `json:"running,omitempty"`
-	Ticks   int       `json:"ticks,omitempty"`
 }
 
 func buildGrid(size int) [][]Cell {
@@ -85,7 +84,6 @@ func buildGrid(size int) [][]Cell {
 
 func Init(size int) *Game {
 	grid := buildGrid(size)
-
 	initialState := GameState{Grid: grid}
 	return &Game{State: initialState}
 }
@@ -99,30 +97,11 @@ func (g *Game) Stop() {
 	g.Running = false
 }
 
-func (g *Game) Print() {
-	for _, row := range g.State.Grid {
-		rowText := ""
-
-		for _, cell := range row {
-			if cell.Alive == true {
-				rowText += "x"
-			} else {
-				rowText += "-"
-			}
-		}
-
-		fmt.Println(rowText)
-	}
-
-	fmt.Printf("\n--------------------------------------------------------------------------- %d\n", g.Ticks)
-}
-
 func (g *Game) loop() {
 	newState := g.State
 
 	for g.Running == true {
-		g.Ticks += 1
-		g.Print()
+		g.State.Ticks += 1
 
 		liveCells := 0
 

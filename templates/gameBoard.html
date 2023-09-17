@@ -1,0 +1,20 @@
+{{define "gameBoard"}}
+<div id="game-board">
+  {{range .}}
+  <div class="row">
+    {{range .}}
+    <div
+      {{
+      if
+      .Alive
+      }}
+      class="cell alive"
+      {{else}}
+      class="cell dead"
+      {{end}}
+    ></div>
+    {{end}}
+  </div>
+  {{end}}
+</div>
+{{end}}
