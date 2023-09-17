@@ -26,7 +26,7 @@ func (c *Cell) getNeighbor(gameState *GameState, coordinates Coordinates) *Cell 
 	return &gameState.Grid[y][x]
 }
 
-func (c *Cell) LiveNeighbors(gameState *GameState) []*Cell {
+func (c *Cell) LiveNeighbors(gameState *GameState) int {
 	neighborCoordinates := []Coordinates{
 		{X: c.Coordindates.X - 1, Y: c.Coordindates.Y},
 		{X: c.Coordindates.X + 1, Y: c.Coordindates.Y},
@@ -38,17 +38,17 @@ func (c *Cell) LiveNeighbors(gameState *GameState) []*Cell {
 		{X: c.Coordindates.X + 1, Y: c.Coordindates.Y + 1},
 	}
 
-	var liveCells = []*Cell{}
+	liveNeighbors := 0
 
 	for _, coord := range neighborCoordinates {
 		neighbor := c.getNeighbor(gameState, coord)
 
 		if neighbor != nil && neighbor.Alive == true {
-			liveCells = append(liveCells, neighbor)
+			liveNeighbors++
 		}
 	}
 
-	return liveCells
+	return liveNeighbors
 }
 
 type GameState struct {
@@ -71,7 +71,7 @@ func Init() *Game {
 					X: x,
 					Y: y,
 				},
-				Alive: rand.Intn(99)+1 >= 99,
+				Alive: rand.Intn(99)+1 >= 90,
 			}
 		}
 	}
@@ -95,7 +95,7 @@ func (g *Game) Print() {
 
 		for _, cell := range row {
 			if cell.Alive == true {
-				rowText += "X"
+				rowText += "x"
 			} else {
 				rowText += "-"
 			}
@@ -114,17 +114,32 @@ func (g *Game) loop() {
 		g.Ticks += 1
 		g.Print()
 
+		liveCells := 0
+
 		for y, row := range g.State.Grid {
 			for x := range row {
 				cell := g.State.Grid[y][x]
+				newCell := &newState.Grid[y][x]
 				neighbors := cell.LiveNeighbors(&g.State)
 
-				if len(neighbors) >= 2 && len(neighbors) <= 3 {
-					newState.Grid[y][x].Alive = true
+				if cell.Alive {
+					if neighbors < 2 || neighbors > 3 {
+						newCell.Alive = false
+					}
 				} else {
-					newState.Grid[y][x].Alive = false
+					if neighbors == 3 {
+						newCell.Alive = true
+					}
+				}
+
+				if newCell.Alive {
+					liveCells++
 				}
 			}
+		}
+
+		if liveCells == 0 {
+			g.Stop()
 		}
 
 		g.State = newState
