@@ -52,17 +52,21 @@ func (c *Cell) LiveNeighbors(gameState *GameState) int {
 }
 
 type GameState struct {
-	Grid [100][100]Cell `json:"grid,omitempty"`
+	Grid [][]Cell `json:"grid,omitempty"`
 }
 
 type Game struct {
+	Id      int       `json:"id,omitempty"`
 	State   GameState `json:"state,omitempty"`
 	Running bool      `json:"running,omitempty"`
 	Ticks   int       `json:"ticks,omitempty"`
 }
 
-func Init() *Game {
-	var grid [100][100]Cell
+func buildGrid(size int) [][]Cell {
+	var grid = make([][]Cell, size)
+	for idx := range grid {
+		grid[idx] = make([]Cell, size)
+	}
 
 	for y, row := range grid {
 		for x := range row {
@@ -75,6 +79,12 @@ func Init() *Game {
 			}
 		}
 	}
+
+	return grid
+}
+
+func Init(size int) *Game {
+	grid := buildGrid(size)
 
 	initialState := GameState{Grid: grid}
 	return &Game{State: initialState}

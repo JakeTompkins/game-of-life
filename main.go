@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	g := game.Init()
+	g := game.Init(100)
 
 	g.Start()
 
