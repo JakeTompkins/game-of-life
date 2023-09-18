@@ -1,16 +1,19 @@
 {{define "gameBoard"}}
-<div id="game-board">
+<div
+  id="game-board"
+  class="w-full h-4/5 flex justify-center items-center flex-col"
+>
   {{range .}}
-  <div class="row">
+  <div class="h-5 w-full flex flex-1">
     {{range .}}
     <div
       {{
       if
       .Alive
       }}
-      class="cell alive"
+      class="bg-green-500 flex-1"
       {{else}}
-      class="cell dead"
+      class="bg-white flex-1"
       {{end}}
     ></div>
     {{end}}

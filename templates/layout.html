@@ -8,7 +8,12 @@
     <link rel="stylesheet" href="/styles/index.css" />
   </head>
   <body>
-    <div id="game-container">{{template "gameBoard" .Grid}}</div>
+    <div
+      id="game-container"
+      class="w-screen h-screen flex justify-center items-center"
+    >
+      {{template "gameBoard" .Grid}}
+    </div>
     <div id="game-form">DAT FORM</div>
   </body>
 </html>
